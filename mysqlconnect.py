@@ -6,62 +6,90 @@ db_user = 'shubhamagnihotri'
 db_password = 'Ki!!erStr1ke'
 db_name = 'telegramquiz'
 
-# connect to the database
-cnx = mysql.connector.connect(
-  host=db_host,
-  user=db_user,
-  password=db_password,
-  database=db_name
-)
+# Create a connection to the database
+def create_connection():
+    cnx = mysql.connector.connect(
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_name,
+    )
+    return cnx
 
-# execute a query
-cursor = cnx.cursor()
-query = 'SELECT * FROM quiz'
-cursor.execute(query)
+# Create a new record
+def create_record(question, answers, correct_answer, explanation):
+    try:
+        cnx = create_connection()
+        cursor = cnx.cursor()
+        add_record = "INSERT INTO questions (question, answers, correct_answer, explanation) VALUES (%s, %s, %s, %s)"
+        data_record = (question, answers, correct_answer, explanation)
+        cursor.execute(add_record, data_record)
+        cnx.commit()
+        print("Record added successfully")
+    except mysql.connector.Error as error:
+        print(f"Failed to add record to database: {error}")
+    finally:
+        cursor.close()
+        cnx.close()
 
-# fetch the results and print them
-results = cursor.fetchall()
-for row in results:
-  print(row)
+# Read all records
+def read_all_records():
+    try:
+        cnx = create_connection()
+        cursor = cnx.cursor()
+        select_all = "SELECT * FROM questions"
+        cursor.execute(select_all)
+        rows = cursor.fetchall()
+        for row in rows:
+            print(row)
+    except mysql.connector.Error as error:
+        print(f"Failed to read records from database: {error}")
+    finally:
+        cursor.close()
+        cnx.close()
 
-# CREATE operation
-# insert a new row into the quiz table
-insert_query = ("INSERT INTO quiz "
-                "(date, question, answers, correct_answer, explanation) "
-                "VALUES (%s, %s, %s, %s, %s)")
-data = ('2023-04-25', 'What is the capital of France?', '["Paris", "Rome", "Madrid", "Berlin"]', 0, 'Paris is the capital of France')
-cursor.execute(insert_query, data)
-cnx.commit()
+# Read a single record by ID
+def read_record_by_id(id):
+    try:
+        cnx = create_connection()
+        cursor = cnx.cursor()
+        select_record = "SELECT * FROM questions WHERE id = %s"
+        cursor.execute(select_record, (id,))
+        row = cursor.fetchone()
+        print(row)
+    except mysql.connector.Error as error:
+        print(f"Failed to read record from database: {error}")
+    finally:
+        cursor.close()
+        cnx.close()
 
-# READ operation
-# fetch all rows from the quiz table
-select_query = "SELECT * FROM quiz"
-cursor.execute(select_query)
-rows = cursor.fetchall()
-for row in rows:
-  print(row)
+# Update a record by ID
+def update_record_by_id(id, question, answers, correct_answer, explanation):
+    try:
+        cnx = create_connection()
+        cursor = cnx.cursor()
+        update_record = "UPDATE questions SET question = %s, answers = %s, correct_answer = %s, explanation = %s WHERE id = %s"
+        data_record = (question, answers, correct_answer, explanation, id)
+        cursor.execute(update_record, data_record)
+        cnx.commit()
+        print("Record updated successfully")
+    except mysql.connector.Error as error:
+        print(f"Failed to update record in database: {error}")
+    finally:
+        cursor.close()
+        cnx.close()
 
-# UPDATE operation
-# update the correct answer for a specific question
-update_query = ("UPDATE quiz "
-                "SET correct_answer = %s "
-                "WHERE question = %s")
-data = (0, 'What is the capital of France?')
-cursor.execute(update_query, data)
-cnx.commit()
-
-# DELETE operation
-# delete a row from the quiz table
-delete_query = ("DELETE FROM quiz "
-                "WHERE question = %s")
-data = ('What is the capital of France?',)
-cursor.execute(delete_query, data)
-cnx.commit()
-
-# close the cursor and connection objects
-cursor.close()
-cnx.close()
-
-# # close the connection
-# cursor.close()
-# cnx.close()
+# Delete a record by ID
+def delete_record_by_id(id):
+    try:
+        cnx = create_connection()
+        cursor = cnx.cursor()
+        delete_record = "DELETE FROM questions WHERE id = %s"
+        cursor.execute(delete_record, (id,))
+        cnx.commit()
+        print("Record deleted successfully")
+    except mysql.connector.Error as error:
+        print(f"Failed to delete record from database: {error}")
+    finally:
+        cursor.close()
+        cnx.close()
