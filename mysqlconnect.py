@@ -1,13 +1,7 @@
-import mysql.connector
-
-# replace the values below with your own credentials
-db_host = 'shubhamagnihotri.mysql.pythonanywhere-services.com'
-db_user = 'shubhamagnihotri'
-db_password = 'Ki!!erStr1ke'
-db_name = 'telegramquiz'
+import mysql
 
 # Create a connection to the database
-def create_connection():
+def create_connection(db_host,db_user,db_password,db_name):
     cnx = mysql.connector.connect(
         host=db_host,
         user=db_user,
@@ -17,9 +11,9 @@ def create_connection():
     return cnx
 
 # Create a new record
-def create_record(question, answers, correct_answer, explanation):
+def create_record(db_host,db_user,db_password,db_name,question, answers, correct_answer, explanation):
     try:
-        cnx = create_connection()
+        cnx = create_connection(db_host,db_user,db_password,db_name)
         cursor = cnx.cursor()
         add_record = "INSERT INTO questions (question, answers, correct_answer, explanation) VALUES (%s, %s, %s, %s)"
         data_record = (question, answers, correct_answer, explanation)
@@ -33,9 +27,9 @@ def create_record(question, answers, correct_answer, explanation):
         cnx.close()
 
 # Read all records
-def read_all_records():
+def read_all_records(db_host,db_user,db_password,db_name):
     try:
-        cnx = create_connection()
+        cnx = create_connection(db_host,db_user,db_password,db_name)
         cursor = cnx.cursor()
         select_all = "SELECT * FROM questions"
         cursor.execute(select_all)
@@ -49,9 +43,9 @@ def read_all_records():
         cnx.close()
 
 # Read a single record by ID
-def read_record_by_id(id):
+def read_record_by_id(db_host,db_user,db_password,db_name,id):
     try:
-        cnx = create_connection()
+        cnx = create_connection(db_host,db_user,db_password,db_name)
         cursor = cnx.cursor()
         select_record = "SELECT * FROM questions WHERE id = %s"
         cursor.execute(select_record, (id,))
@@ -64,9 +58,9 @@ def read_record_by_id(id):
         cnx.close()
 
 # Update a record by ID
-def update_record_by_id(id, question, answers, correct_answer, explanation):
+def update_record_by_id(db_host,db_user,db_password,db_name,id, question, answers, correct_answer, explanation):
     try:
-        cnx = create_connection()
+        cnx = create_connection(db_host,db_user,db_password,db_name)
         cursor = cnx.cursor()
         update_record = "UPDATE questions SET question = %s, answers = %s, correct_answer = %s, explanation = %s WHERE id = %s"
         data_record = (question, answers, correct_answer, explanation, id)
@@ -80,9 +74,9 @@ def update_record_by_id(id, question, answers, correct_answer, explanation):
         cnx.close()
 
 # Delete a record by ID
-def delete_record_by_id(id):
+def delete_record_by_id(db_host,db_user,db_password,db_name,id):
     try:
-        cnx = create_connection()
+        cnx = create_connection(db_host,db_user,db_password,db_name)
         cursor = cnx.cursor()
         delete_record = "DELETE FROM questions WHERE id = %s"
         cursor.execute(delete_record, (id,))
