@@ -7,7 +7,7 @@ from datetime import datetime
 now = datetime.now()
 date_time_str = now.strftime("%Y-%m-%d")
 
-cnx = create_connection(db_host, db_user, db_password, db_name)
+cnx = create_connection(db_host,db_user,db_password,db_name)
 
 
 allGroups = getChatIds(update_URL)
