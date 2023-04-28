@@ -7,7 +7,9 @@ def getChatIds(update_url):
   # Extract the chat IDs from the updates
   updates = response.json()['result']
   chat_ids = set()
+  print(updates)
   for update in updates:
+      print(update)
       if 'message' in update and 'chat' in update['message']:
           chat_id = update['message']['chat']['id']
           chat_type = update['message']['chat']['type']
