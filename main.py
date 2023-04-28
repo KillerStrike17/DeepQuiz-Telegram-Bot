@@ -1,14 +1,15 @@
 from telegrambot import getChatIds,sendPoll
 from mysqlconnect import create_connection
-from credentials import update_URL, poll_URL,db_host, db_user, db_password, db_name
+from mongodbconnect import fetch_data
+from credentials import update_URL, poll_URL,db_collection, db_database
 from datetime import datetime
 
 # current dateTime
 now = datetime.now()
-date_time_str = now.strftime("%Y-%m-%d")
+date_time_str = str(now.strftime("%d-%m-%Y"))
 
-cnx = create_connection(db_host,db_user,db_password,db_name)
-
-
-allGroups = getChatIds(update_URL)
-sendPoll(poll_URL,allGroups)
+quiz = fetch_data(date_time_str,db_collection, db_database)
+# print(quiz)
+if quiz !="":
+    allGroups = getChatIds(update_URL)
+    sendPoll(poll_URL,allGroups,quiz)

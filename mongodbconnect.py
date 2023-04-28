@@ -27,10 +27,10 @@
 # from collections.abc import MutableMapping
 
 import pymongo, json
-from credentials import db_collection,db_database
 import pandas as pd
+from credentials import *
 
-def upload_data():
+def upload_data(db_collection,db_database):
         client = pymongo.MongoClient('localhost', 27017)
         db = client.get_database(db_database)
         col = db.get_collection(db_collection)
@@ -39,4 +39,16 @@ def upload_data():
         result = col.insert_many(data)
         
         
-upload_data()
+# upload_data(db_collection,db_database)
+
+def fetch_data(query_string,db_collection,db_database):
+        client = pymongo.MongoClient('localhost', 27017)
+        db = client.get_database(db_database)
+        col = db.get_collection(db_collection)
+        data = col.find_one({"date":query_string})
+        if data:
+                return {'question':data['question'],'options':[data['option1'],data['option2'],data['option3'],data['option4']],
+                        'correctOption':data['correct_answer'],'explaination':data['explaination']}
+        return ""
+
+# print(fetch_data('30-04-2023',db_collection,db_database))

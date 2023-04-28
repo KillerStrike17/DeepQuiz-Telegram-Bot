@@ -23,13 +23,14 @@ def getChatIds(update_url):
   return allChatIds
 
 
-def sendPoll(poll_url,chatIds, question, options, correctOption):
+def sendPoll(poll_url,chatIds,quiz):
   for chatId in chatIds:
     parameters = {
         "chat_id":chatId,
-        "question":question,
-        "options":json.dumps(options),
-        "correct_option_id":correctOption,
+        "question":quiz['question'],
+        "options":json.dumps(quiz['options']),
+        "correct_option_id":quiz['correctOption'],
+        "explaination":quiz['explaination'],
         "type":"quiz",
     }
     resp = requests.get(poll_url, data=parameters)
