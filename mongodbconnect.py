@@ -17,9 +17,13 @@ class databaseConnect:
                 return db
                 
         
-        def upload_data(self,data):
+        def insert_data(self,data):
                 json_data = json.loads(data.to_json(orient = 'records'))
                 result = self.col.insert_many(json_data)
+        
+        def update_data(self,myquery,newvalues):
+                self.col.update_one(myquery, newvalues)
+
 
         def fetch_data(self, query_string=""):
                 if query_string:

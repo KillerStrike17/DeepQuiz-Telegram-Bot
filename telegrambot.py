@@ -1,6 +1,5 @@
 import requests, json
 
-
 class telegramBot:
   def __init__(self,update_url,poll_url):
      self.update_url = update_url
@@ -42,5 +41,3 @@ class telegramBot:
           "type":"quiz",
       }
       resp = requests.get(self.poll_url, data=parameters)
-
-
